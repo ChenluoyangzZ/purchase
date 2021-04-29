@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dingding.purchase.mapper.SearchMapper">
+    <resultMap id="CategoryVo" type="com.dingding.purchase.pojo.vo.SearchVO">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="itemId" property="itemId"/>
+        <result column="itemName" property="itemName"/>
+        <result column="sellCounts" property="sellCounts"/>
+        <result column="imgUrl" property="imgUrl"/>
+        <result column="price" property="price"/>
+    </resultMap>
+    <select id="getSearchList" parameterType="Map" resultMap="CategoryVo">
+        SELECT
+        i.id as itemId,
+        i.item_name as itemName,
+        i.sell_counts as sellCounts,
+        img.url as imgUrl,
+        tempSpec.price_discount as price
+        FROM
+        items i
+        LEFT JOIN
+        items_img img
+        on
+        i.id =img.item_id
+        LEFT JOIN
+        (
+        SELECT
+        item_id,MIN(price_discount) AS price_discount
+        from
+        items_spec
+        GROUP BY
+        item_id
+        ) tempSpec
+        on
+        i.id=tempSpec.item_id
+        WHERE
+        img.is_main=1
+        <if test="paramsMap.keywords !=null and paramsMap.keywords !=''">
+            AND i.item_name like '%${paramsMap.keywords}%'
+        </if>
+        order by
+        <choose>
+            <when test="paramsMap.sort == &quot;c&quot;">
+                i.sell_counts desc
+            </when>
+            <when test="paramsMap.sort == &quot;p&quot;">
+                tempSpec.price_discount asc
+            </when>
+            <otherwise>
+                i.item_name asc
+            </otherwise>
+        </choose>
+    </select>
+    <select id="getSearchListByCatId" parameterType="Map" resultMap="CategoryVo">
+        SELECT
+        i.id as itemId,
+        i.item_name as itemName,
+        i.sell_counts as sellCounts,
+        img.url as imgUrl,
+        tempSpec.price_discount as price
+        FROM
+        items i
+        LEFT JOIN
+        items_img img
+        on
+        i.id =img.item_id
+        LEFT JOIN
+        (
+        SELECT
+        item_id,MIN(price_discount) AS price_discount
+        from
+        items_spec
+        GROUP BY
+        item_id
+        ) tempSpec
+        on
+        i.id=tempSpec.item_id
+        WHERE
+        img.is_main=1
+        <if test="paramsMap.catId !=null and paramsMap.catId !=''">
+            AND i.cat_id =#{paramsMap.catId}
+        </if>
+        order by
+        <choose>
+            <when test="paramsMap.sort == &quot;c&quot;">
+                i.sell_counts desc
+            </when>
+            <when test="paramsMap.sort == &quot;p&quot;">
+                tempSpec.price_discount asc
+            </when>
+            <otherwise>
+                i.item_name asc
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

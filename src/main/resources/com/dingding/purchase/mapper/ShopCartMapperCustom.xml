@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dingding.purchase.mapper.ShopCartMapperCustom">
+  <select id="getShopCartList" parameterType="List" resultType="com.dingding.purchase.pojo.vo.ShopCartVO">
+    SELECT
+i.id as itemId,
+i.item_name as itemName,
+ii.url as itemImgUrl,
+ic.id as specId,
+ic.name as specName,
+ic.price_discount as priceDiscount,
+ic.price_normal as priceNormal
+FROM
+items_spec ic
+LEFT JOIN
+items i
+    ON
+    i.id=ic.item_id
+LEFT JOIN
+items_img ii
+on
+ii.item_id=i.id
+WHERE
+ii.is_main=1
+AND
+  ic.id in
+  <foreach collection="paramsList" index="index" item="specId" open="(" separator="," close=")">
+    #{specId}
+  </foreach>
+  </select>
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dingding.purchase.mapper.ItemsParamMapper">
+  <resultMap id="BaseResultMap" type="com.dingding.purchase.pojo.ItemsParam">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="item_id" jdbcType="VARCHAR" property="itemId" />
+    <result column="open_book" jdbcType="VARCHAR" property="openBook" />
+    <result column="paper" jdbcType="VARCHAR" property="paper" />
+    <result column="is_suit" jdbcType="VARCHAR" property="isSuit" />
+    <result column="book_number" jdbcType="VARCHAR" property="bookNumber" />
+    <result column="packing_specification" jdbcType="VARCHAR" property="packingSpecification" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, item_id, open_book, paper, is_suit, book_number, "packing_specification, created_time,
+    updated_time
+  </sql>
+</mapper>
