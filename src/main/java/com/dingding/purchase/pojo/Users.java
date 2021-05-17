@@ -39,7 +39,7 @@ public class Users {
     /**
      * 手机号 手机号
      */
-    private String moblie;
+    private String mobile;
 
     /**
      * 邮箱地址 邮箱地址
@@ -179,19 +179,19 @@ public class Users {
     /**
      * 获取手机号 手机号
      *
-     * @return moblie - 手机号 手机号
+     * @return mobile - 手机号 手机号
      */
-    public String getMoblie() {
-        return moblie;
+    public String getMobile() {
+        return mobile;
     }
 
     /**
      * 设置手机号 手机号
      *
-     * @param moblie 手机号 手机号
+     * @param mobile 手机号 手机号
      */
-    public void setMoblie(String moblie) {
-        this.moblie = moblie;
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     /**

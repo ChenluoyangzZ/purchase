@@ -11,7 +11,7 @@
         <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
         <result column="realname" jdbcType="VARCHAR" property="realname"/>
         <result column="face" jdbcType="VARCHAR" property="face"/>
-        <result column="moblie" jdbcType="VARCHAR" property="moblie"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
         <result column="email" jdbcType="VARCHAR" property="email"/>
         <result column="sex" jdbcType="INTEGER" property="sex"/>
         <result column="birthday" jdbcType="DATE" property="birthday"/>
@@ -22,7 +22,7 @@
         <!--
           WARNING - @mbg.generated
         -->
-        id, username, password, nickname, realname, face, moblie, email, sex, birthday,
+        id, username, password, nickname, realname, face, mobile, email, sex, birthday,
         created_time, updated_time
     </sql>
 </mapper>

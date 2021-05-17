@@ -109,7 +109,7 @@ public class PassportController {
         cookieMsg.setRealname(null);
         cookieMsg.setCreatedTime(null);
         cookieMsg.setBirthday(null);
-        cookieMsg.setMoblie(null);
+        cookieMsg.setMobile(null);
         return cookieMsg;
     }
 }

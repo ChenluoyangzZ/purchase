@@ -30,7 +30,7 @@ public class CenterUserBO {
     /**
      * 手机号 手机号
      */
-    private String moblie;
+    private String mobile;
 
     /**
      * 邮箱地址 邮箱地址

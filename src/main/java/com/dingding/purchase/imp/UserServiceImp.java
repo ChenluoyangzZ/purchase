@@ -77,7 +77,12 @@ public class UserServiceImp implements UserService {
     @Override
     public Users updateUserForCenter(String userId, CenterUserBO centerUserBO) {
         Users users = new Users();
-        BeanUtils.copyProperties(centerUserBO, users);
+        users.setEmail(centerUserBO.getEmail());
+        users.setSex(centerUserBO.getSex());
+        users.setMobile(centerUserBO.getMobile());
+        users.setnickname(centerUserBO.getNickname());
+        users.setRealname(centerUserBO.getRealname());
+        users.setBirthday(centerUserBO.getBirthday());
         users.setId(userId);
         users.setUpdatedTime(
                 new Date());
