@@ -51,23 +51,18 @@ public class OrderController {
         if (StringUtils.isBlank(orderBO.getUserId())) {
           return   RespondResultUtils.errorMsg("没有传入userId");
         }
-        List<ShopCartBO> shopCartBOS = shopCartController.getShopCartBOS(orderBO.getUserId());
-        if(shopCartBOS == null || shopCartBOS.isEmpty()){
-            CookieUtils.setCookie(httpServletRequest, httpServletResponse, "shopcart", "", true);
-        }else {
-            String[] split = orderBO.getItemSpecIds().split(",");
-            String[] split1 = orderBO.getItemAmounts().split(",");
-            for (int i = 0; i < split.length; i++) {
-                ItemsSpec itemsSpec = itemsSpecMapper.selectByPrimaryKey(split[i]);
-                if (Integer.parseInt(split1[i])>itemsSpec.getStock()){
-                    return RespondResultUtils.errorMsg("选货数量大于库存");
-                }else {
-                    shopCartController.updateIsDelete(orderBO.getUserId(),split[i]);
-                }
+        String[] split = orderBO.getItemSpecIds().split(",");
+        String[] split1 = orderBO.getItemAmounts().split(",");
+        for (int i = 0; i < split.length; i++) {
+            ItemsSpec itemsSpec = itemsSpecMapper.selectByPrimaryKey(split[i]);
+            if (Integer.parseInt(split1[i])>itemsSpec.getStock()){
+                return RespondResultUtils.errorMsg("选货数量大于库存");
+            }else {
+                shopCartController.updateIsDelete(orderBO.getUserId(),split[i]);
             }
-            List<ShopCartBO> shopCartBO = shopCartController.getShopCartBOS(orderBO.getUserId());
-            CookieUtils.setCookie(httpServletRequest, httpServletResponse, "shopcart", objectMapper.writeValueAsString(shopCartBO), true);
         }
+        List<ShopCartBO> shopCartBOS = shopCartController.getShopCartBOS(orderBO.getUserId());
+        CookieUtils.setCookie(httpServletRequest, httpServletResponse, "shopcart", objectMapper.writeValueAsString(shopCartBOS), true);
         return RespondResultUtils.ok(orderService.createOrder(orderBO));
     }
 
