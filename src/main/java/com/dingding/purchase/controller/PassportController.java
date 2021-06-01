@@ -9,6 +9,7 @@ import com.dingding.purchase.service.ShopCartService;
 import com.dingding.purchase.service.UserService;
 import com.dingding.purchase.uitls.CookieUtils;
 import com.dingding.purchase.uitls.MD5Uitls;
+import com.dingding.purchase.uitls.RedisUtils;
 import com.dingding.purchase.uitls.RespondResultUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Api(tags = "登录注册接口")
 @RestController
@@ -34,6 +36,8 @@ public class PassportController {
     private ObjectMapper objectMapper;
     @Autowired
     private ShopCartController shopCartController;
+    @Autowired
+    private RedisUtils redisUtils;
 
     @ApiOperation("账号是否存在")
     @GetMapping("/usernameIsExist")
@@ -68,7 +72,10 @@ public class PassportController {
         if (userBO.getPassword().length() < 6) {
             return RespondResultUtils.errorMsg("密码不能少于六位数");
         }
-        Users cookieMsg = frontCookieMsg(userService.createUser(userBO));
+        Users user = userService.createUser(userBO);
+        Users cookieMsg = frontCookieMsg(user);
+        redisUtils.setKeyExp("token:"+user.getId(), UUID.randomUUID().toString().trim());
+        CookieUtils.setCookie(httpServletRequest, httpServletResponse, "user_token", objectMapper.writeValueAsString(redisUtils.getKey("token"+user.getId())), true);
         CookieUtils.setCookie(httpServletRequest, httpServletResponse, "user", objectMapper.writeValueAsString(cookieMsg), true);
         return RespondResultUtils.ok();
     }
@@ -87,7 +94,9 @@ public class PassportController {
         }
         Users users = userService.queryUserForLogin(userBO.getUsername(), MD5Uitls.genMD5Str(userBO.getPassword()));
                 Users cookieMsg = frontCookieMsg(users);
+        redisUtils.setKeyExp("token:"+users.getId(),UUID.randomUUID().toString().trim());
         CookieUtils.setCookie(httpServletRequest, httpServletResponse, "user", objectMapper.writeValueAsString(cookieMsg), true);
+        CookieUtils.setCookie(httpServletRequest, httpServletResponse, "user_token", objectMapper.writeValueAsString(redisUtils.getKey("token:"+users.getId())), true);
         List<ShopCartBO> shopCartVOList = shopCartController.getShopCartBOS(users.getId());
         CookieUtils.setCookie(httpServletRequest, httpServletResponse, "shopcart", objectMapper.writeValueAsString(shopCartVOList), true);
         return RespondResultUtils.ok();
@@ -100,6 +109,8 @@ public class PassportController {
                          HttpServletResponse httpServletResponse) {
         CookieUtils.deleteCookie(httpServletRequest, httpServletResponse, "user");
         CookieUtils.deleteCookie(httpServletRequest, httpServletResponse, "shopcart");
+        CookieUtils.deleteCookie(httpServletRequest, httpServletResponse, "user_token");
+        redisUtils.deleteKey("token:"+userId);
         return RespondResultUtils.ok();
     }
 
